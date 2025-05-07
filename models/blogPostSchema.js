@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+const commentSchema = new mongoose.Schema({
+    userName: { type: String, required: true },
+    text: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+});
+
 const blogPostSchema = new mongoose.Schema({
     category: {type: String, required: true },
     title: {type: String, required: true },
@@ -9,7 +15,8 @@ const blogPostSchema = new mongoose.Schema({
         unit: {type: String, required: true}
     },
     author: {type: mongoose.Schema.Types.ObjectId, ref: 'authorSchema', required: true },
-    content: {type: String, required: true }
+    content: {type: String, required: true },
+    comments: [commentSchema] // Embedded comments
 }, {
     timestamps: true
 })

@@ -7,6 +7,7 @@ import authorsRouter from './routers/authors.route.js'
 import blogPostRouter from './routers/blogPost.route.js'
 import queryCustomRouter from './routers/queryCustom.route.js';
 import uploadRoutes from './routers/upload.routes.js'; // Le rotte di cloudinary
+import commentsRouter from './routers/comments.route.js'; // Le rote dei commenti
 
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/authors', authorsRouter)
 app.use('/blogPost', blogPostRouter)
 app.use('/queries', queryCustomRouter);
 app.use('/api', uploadRoutes);
+app.use('/comments', commentsRouter);
 
 
 // Creazione API
