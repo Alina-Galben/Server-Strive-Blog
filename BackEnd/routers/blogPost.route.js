@@ -1,5 +1,6 @@
 import express from 'express';
 import blogPostModel from '../models/blogPostSchema.js';
+import { uploadCover } from '../middleware/multer.js';
 
 const router = express.Router()
 
@@ -55,13 +56,63 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({error: err.message})
     }
 })
-
+/* Post classico
 router.post('/', async (req, res) => {
     const obj = req.body;
     const blogPost = new blogPostModel(obj);
     const dbBlogPost = await blogPost.save();
     res.status(201).json(dbBlogPost);
 })
+*/
+
+// Post Creazione blogPost con file copertina - cover
+router.post('/', uploadCover.single('cover'), async (req, res) => {
+    try {
+      console.log("📝 Creazione blogPost - BODY:", req.body);
+      console.log("🖼️ File copertina ricevuto:", req.file);
+  
+      const { category, title, readTime, author, content } = req.body;
+  
+      // 1. Controllo campi obbligatori
+      if (!category || !title || !readTime || !author || !content) {
+        return res.status(400).json({ error: "⚠️ Campi obbligatori mancanti (category, title, readTime, author, content)." });
+      }
+  
+      const parsedReadTime = JSON.parse(readTime); // perché Postman potrebbe inviarlo come stringa
+  
+      // 2. Gestione copertina
+      let cover;
+      if (req.file && req.file.path) {
+        cover = req.file.path;
+      } else {
+        cover = "https://example.com/default-cover.jpg";
+        console.warn("⚠️ Nessuna cover caricata. Uso cover di default.");
+      }
+  
+      // 3. Creazione del nuovo blog post
+      const newPost = new blogPostModel({
+        category,
+        title,
+        cover,
+        readTime: {
+          value: parsedReadTime.value,
+          unit: parsedReadTime.unit
+        },
+        author,
+        content
+      });
+  
+      const savedPost = await newPost.save();
+      res.status(201).json(savedPost);
+  
+    } catch (error) {
+      console.error("❌ Errore creazione blogPost:", error.message);
+      if (error.response?.body) {
+        console.error("📡 Dettagli Cloudinary:", error.response.body);
+      }
+      res.status(500).json({ error: "Errore interno del server: " + error.message });
+    }
+});
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;

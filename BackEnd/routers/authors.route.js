@@ -1,6 +1,6 @@
 import express from 'express';
 import authorModel from '../models/authorSchema.js';
-import upload from '../middleware/multer.js'
+import { uploadAvatar } from '../middleware/multer.js'
 import sendEmail from '../utils/sendEmail.js';
 
 const router = express.Router()
@@ -58,42 +58,71 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-// router.post('/', async (req, res) => {
-//     const obj = req.body;
-//     const author = new authorModel(obj);
-//     const dbAuthor = await author.save();
-//     res.status(201).json(dbAuthor);
-// })
-
-router.post('/', upload.single('avatar'), async (req, res) => {
-    try {
-      const { nome, cognome, email, dataDiNascita } = req.body
-  
-      const avatar = req.file?.path || "https://example.com/default.png"
-  
-      const newAuthor = new authorModel({
-        nome,
-        cognome,
-        email,
-        dataDiNascita,
-        avatar
-      })
-  
-      const savedAuthor = await newAuthor.save()
-  
-      await sendEmail({
-        to: savedAuthor.email,
-        subject: 'Benvenuto su Strive Blog APY!',
-        text: `Ciao ${savedAuthor.nome}, grazie per esserti registrato!`,
-        html: `<strong>Ciao ${savedAuthor.nome}</strong>,<br/>grazie per esserti registrato su <em>Strive Blog APY</em>!`
-      })
-  
-      res.status(201).json(savedAuthor)
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ error: error.message })
-    }
+/* Post classico
+router.post('/', async (req, res) => {
+    const obj = req.body;
+    const author = new authorModel(obj);
+    const dbAuthor = await author.save();
+    res.status(201).json(dbAuthor);
 })
+*/
+
+// Post con inserimento dati, file imagine e email - avatar
+router.post('/', uploadAvatar.single('avatar'), async (req, res) => {
+    try {
+      console.log("📥 Richiesta ricevuta - BODY:", req.body);
+      console.log("🖼️ File ricevuto:", req.file);
+  
+      const { nome, cognome, email, dataDiNascita } = req.body;
+  
+      // 1. Controllo campi obbligatori
+      if (!nome || !cognome || !email || !dataDiNascita) {
+        return res.status(400).json({ error: "⚠️ Campi obbligatori mancanti (nome, cognome, email, dataDiNascita)." });
+      }
+  
+      // 2. Controllo email già esistente
+      const emailExists = await authorModel.findOne({ email });
+      if (emailExists) {
+        return res.status(409).json({ error: "⚠️ Email già esistente." });
+      }
+  
+      // 3. Avatar: obbligatorio? No, ma lo segnala in console
+      let avatar;
+      if (req.file && req.file.path) {
+        avatar = req.file.path;
+      } else {
+        avatar = "https://example.com/default.png";
+        console.warn("⚠️ Avatar mancante. Usato avatar di default.");
+      }
+  
+      // 4. Creazione autore
+      const newAuthor = new authorModel({ nome, cognome, email, dataDiNascita, avatar });
+      const savedAuthor = await newAuthor.save();
+  
+      // 5. Email di benvenuto
+      try {
+        await sendEmail({
+          to: savedAuthor.email,
+          subject: 'Benvenuto su Strive Blog!',
+          text: `Ciao ${savedAuthor.nome}, grazie per esserti registrato!`,
+          html: `<strong>Ciao ${savedAuthor.nome}</strong>,<br/>grazie per esserti registrato su <em>Strive Blog</em>!`
+        });
+      } catch (emailErr) {
+        console.warn("📧 Errore invio email (non blocca):", emailErr.message);
+      }
+  
+      // 6. Risposta finale
+      res.status(201).json(savedAuthor);
+  
+    } catch (error) {
+      console.error("❌ Errore interno:", error.message);
+      if (error.response?.body) {
+        console.error("🔍 Dettagli Cloudinary:", error.response.body);
+      }
+      res.status(500).json({ error: "Errore interno del server: " + error.message });
+    }
+});
+  
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;
