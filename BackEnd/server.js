@@ -8,6 +8,7 @@ import blogPostRouter from './routers/blogPost.route.js'
 import queryCustomRouter from './routers/queryCustom.route.js';
 import uploadRoutes from './routers/upload.routes.js'; // Le rotte di cloudinary
 import commentsRouter from './routers/comments.route.js'; // Le rote dei commenti
+import authRouter from './routers/auth.route.js';
 
 
 const app = express();
@@ -20,14 +21,13 @@ app.use('/blogPost', blogPostRouter)
 app.use('/queries', queryCustomRouter);
 app.use('/api', uploadRoutes);
 app.use('/comments', commentsRouter);
+app.use('/auth', authRouter);
 
 
 // Creazione API
 app.get('/', (req, res) => {
     res.send('<h1>Ciao Alina!!!! Sei nella tua prima API - Strive Blog')
 })
-
-
 
 // Avvio del server SOLO dopo la connessione al DB
 const startServer = async () => {

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Embedded comments modo dinamico
 const commentSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     text: { type: String, required: true },
@@ -14,7 +15,7 @@ const blogPostSchema = new mongoose.Schema({
         value: {type: Number, required: true },
         unit: {type: String, required: true}
     },
-    author: {type: mongoose.Schema.Types.ObjectId, ref: 'authorSchema', required: true },
+    author: {type: mongoose.Schema.Types.ObjectId, ref: 'Authors', required: true },
     content: {type: String, required: true },
     comments: [commentSchema] // Embedded comments
 }, {

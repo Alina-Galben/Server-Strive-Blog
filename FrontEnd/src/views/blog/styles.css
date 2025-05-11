@@ -19,6 +19,7 @@
   margin-top: 50px;
   margin-bottom: 50px;
   font-weight: bold;
+  font-size: 2.5rem; /* ✅ aggiunto */
 }
 
 .blog-details-container {
@@ -26,6 +27,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* ✅ migliora su dispositivi piccoli */
 }
 
 .blog-details-author {
@@ -37,6 +39,31 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* Nuova sezione per il contenuto del blog */
+.blog-content {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
 .rdw-editor-main {
-  border: 1px solid grey
+  border: 1px solid grey;
+}
+
+/* Bottone */
+.back-button {
+  background-color: #212529;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  background-color: #343a40;
 }

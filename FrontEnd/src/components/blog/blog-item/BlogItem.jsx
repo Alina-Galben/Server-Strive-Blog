@@ -3,20 +3,32 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import BlogAuthor from "../blog-author/BlogAuthor";
 import "./styles.css";
-const BlogItem = (props) => {
-  const { title, cover, author, _id } = props;
+
+const BlogItem = ({ title, cover, author, _id }) => {
+  const defaultCover = "https://placehold.co/600x400?text=Nessuna+Copertina";
+
   return (
-    <Link to={`/blog/${_id}`} className="blog-link">
-      <Card className="blog-card">
-        <Card.Img variant="top" src={cover} className="blog-cover" />
-        <Card.Body>
-          <Card.Title>{title}</Card.Title>
-        </Card.Body>
-        <Card.Footer>
-          <BlogAuthor {...author} />
-        </Card.Footer>
-      </Card>
-    </Link>
+    <Card className="blog-card">
+      <Card.Img
+        variant="top"
+        src={cover || defaultCover}
+        className="blog-cover"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = defaultCover;
+        }}
+      />
+      <Card.Body>
+        <Card.Title>
+          <Link to={`/blog/${_id}`} className="blog-link-title">
+            {title}
+          </Link>
+        </Card.Title>
+      </Card.Body>
+      <Card.Footer>
+        <BlogAuthor {...author} _id={author._id} />
+      </Card.Footer>
+    </Card>
   );
 };
 

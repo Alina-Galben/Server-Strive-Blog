@@ -1,18 +1,28 @@
 import mongoose from "mongoose";
+import bcrypt from 'bcrypt';
 
-/*// Nome del database - quando nel .env non va inserito il nome del database va creato il nome del DB
+/*// Nome del database - quando nel .env non va inserito il nome del database, allora va creato il nome del DB
 const dbName = 'sample_mflix'
 */
 
-// Lo SCHEMA di Mongoose sara la struttura di ogni oggetto che salvero nella Collection
 const authorsSchema = new mongoose.Schema({
     nome: { type: String, required: true },
     cognome: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     email: { type: String, required: true },
     dataDiNascita: { type: String, required: true },
     avatar: { type: String, required: true },
+    password: { type: String, required: true},
 }, {
     timestamps: true
+})
+
+// Cripta la password solo se modificata
+authorsSchema.pre('save', async function (next) {
+    if(!this.isModified('password')) return next();
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next(); 
 })
 
 const authorModel = mongoose.model('Authors', authorsSchema);

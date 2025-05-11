@@ -1,8 +1,11 @@
 import express from 'express';
 import blogPostModel from '../models/blogPostSchema.js';
 import { uploadCover } from '../middleware/multer.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router()
+
+router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
     try {
@@ -48,15 +51,21 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        const blogPost = await blogPostModel.findById(id);
-        res.status(200).json(blogPost);
-    } catch(err) {
-        res.status(500).json({error: err.message})
+  try {
+    const post = await blogPostModel.findById(req.params.id).populate("author");
+
+    if (!post) {
+      return res.status(404).json({ error: "Post non trovato" });
     }
-})
-/* Post classico
+
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+/* Post classico senza upload
 router.post('/', async (req, res) => {
     const obj = req.body;
     const blogPost = new blogPostModel(obj);
@@ -65,7 +74,7 @@ router.post('/', async (req, res) => {
 })
 */
 
-// Post Creazione blogPost con file copertina - cover
+// Post Creazione blogPost con file copertina - cover con upload
 router.post('/', uploadCover.single('cover'), async (req, res) => {
     try {
       console.log("📝 Creazione blogPost - BODY:", req.body);

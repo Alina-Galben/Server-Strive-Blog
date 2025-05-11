@@ -1,30 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 import NavBar from "./components/navbar/BlogNavbar";
 import Footer from "./components/footer/Footer";
 import Home from "./views/home/Home";
 import Blog from "./views/blog/Blog";
-import NewBlogPost from "./views/new/New";
+import New from "./views/new/New";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AuthorPosts from "./views/author/AuthorPosts";
+import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
+import AuthorProfile from "./views/author/AuthorProfile";
+import AuthorMe from "./views/author/AuthorMe";
 
 function App() {
-
-  const fetchAuthors = async () => {
-    const res = await fetch(process.env.REACT_APP_APYURL + '/authors');
-    const data =await res.json();
-    console.log(data);
-  }
-
-  useEffect(() => {
-    fetchAuthors()
-  },[])
-
   return (
     <Router>
       <NavBar />
       <Routes>
         <Route path="/" exact element={<Home />} />
         <Route path="/blog/:id" element={<Blog />} />
-        <Route path="/new" element={<NewBlogPost />} />
+        <Route path="/new" element={<New />} />
+        <Route path="/author/:id/posts" element={<AuthorPosts />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/author/:id" element={<AuthorProfile />} />
+        <Route path="/author/me" element={<AuthorMe />} />
       </Routes>
       <Footer />
     </Router>

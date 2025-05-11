@@ -1,7 +1,10 @@
 import express from 'express';
 import blogPostModel from '../models/blogPostSchema.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // GET all comments for a post
 router.get('/blogPosts/:id', async (req, res) => {
@@ -41,7 +44,7 @@ router.put('/blogPosts/:id/:commentId', async (req, res) => {
   try {
     const post = await blogPostModel.findById(req.params.id);
     const comment = post.comments.id(req.params.commentId);
-    comment.set(req.body); // aggiornamento con { userName, text }
+    comment.set(req.body); // aggiornamento con { nome e text }
     await post.save();
     res.status(200).json(comment);
   } catch (err) {

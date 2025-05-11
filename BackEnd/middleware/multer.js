@@ -37,6 +37,7 @@ const fileFilter = (req, file, cb) => {
     'image/jpeg',
     'image/png',
     'image/jpg',
+    'HEIC',
     'application/pdf'
   ];
   if (allowedMimeTypes.includes(file.mimetype)) {

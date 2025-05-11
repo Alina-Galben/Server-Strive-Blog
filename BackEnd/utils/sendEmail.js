@@ -27,8 +27,6 @@ const sendEmail = async ({ to, subject, text, html }) => {
     if (error.response?.body) {
       console.error('📩 Dettaglio errore SendGrid:', JSON.stringify(error.response.body, null, 2));
     }
-
-    // 🔒 Non rilanciare l'errore per evitare che blocchi il server
   }
 };
 

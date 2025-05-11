@@ -4,8 +4,11 @@ import { uploadAvatar, uploadCover } from '../middleware/multer.js';
 import authorModel from '../models/authorSchema.js';
 import blogPostModel from '../models/blogPostSchema.js';
 import deleteFromCloudinary from '../utils/deleteFromCloudinary.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 /* Rota di test
 router.post('/upload', upload.single('file'), (req, res) => {

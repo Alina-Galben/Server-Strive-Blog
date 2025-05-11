@@ -18,3 +18,7 @@
   width: 160px;
   text-decoration: none;
 }
+
+.register-container {
+  padding-top: 120px !important;
+}

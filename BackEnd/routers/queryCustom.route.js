@@ -1,7 +1,10 @@
 import express from 'express';
 import authorModel from '../models/authorSchema.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // 1. isActive true
 router.get('/active', async (req, res) => {
