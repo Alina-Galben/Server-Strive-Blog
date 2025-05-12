@@ -4,10 +4,11 @@ import jwt from 'jsonwebtoken';
 import authorModel from '../models/authorSchema.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { uploadAvatar } from '../middleware/multer.js';
+import passport from 'passport'
 
 const router = express.Router();
 
-// REGISTRAZIONE
+// REGISTRAZIONE CLASSICA
 router.post('/register', uploadAvatar.single("avatar"), async (req, res) => {
     try {
         const { nome, cognome, username, email, dataDiNascita, password } = req.body;
@@ -66,5 +67,25 @@ router.get('/me', authMiddleware, async (req, res) => {
         res.status(500).json({ error: err.message});
     }
 });
+
+// Avvia autenticazione con Google
+router.get(
+  '/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+)
+
+// Callback dopo autenticazione Google
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login', session: false }),
+  (req, res) => {
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+      expiresIn: '48h',
+    })
+
+    // Redirige il token al frontend (adatta la URL se serve)
+    res.redirect(`http://localhost:3000/login?token=${token}`)
+  }
+)
 
 export default router

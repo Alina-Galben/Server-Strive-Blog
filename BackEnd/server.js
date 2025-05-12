@@ -3,6 +3,10 @@ import cors from 'cors';
 import "dotenv/config";
 import db from './db.js';
 import './models/authorSchema.js'; // così registro lo schema all'avvio
+import passport from 'passport'
+import './config/passport.js' // Strategia Google
+
+// ROUTERS
 import authorsRouter from './routers/authors.route.js'
 import blogPostRouter from './routers/blogPost.route.js'
 import queryCustomRouter from './routers/queryCustom.route.js';
@@ -13,9 +17,12 @@ import authRouter from './routers/auth.route.js';
 
 const app = express();
 
-// Middleware
+// Middleware base
 app.use(cors())
 app.use(express.json())
+app.use(passport.initialize()) // Inizializza Passport
+
+// API
 app.use('/authors', authorsRouter)
 app.use('/blogPost', blogPostRouter)
 app.use('/queries', queryCustomRouter);
@@ -42,8 +49,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-/*app.listen(process.env.PORT, () => {
-    console.log('Server is running on port ' +process.env.PORT);
-})
-*/

@@ -7,12 +7,13 @@ const dbName = 'sample_mflix'
 
 const authorsSchema = new mongoose.Schema({
     nome: { type: String, required: true },
-    cognome: { type: String, required: true },
+    cognome: { type: String, required: false },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true },
-    dataDiNascita: { type: String, required: true },
+    dataDiNascita: { type: String, required: false },
     avatar: { type: String, required: true },
     password: { type: String, required: true},
+    googleId: { type: String, unique: true, sparse: true },
 }, {
     timestamps: true
 })
