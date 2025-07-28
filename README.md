@@ -9,10 +9,9 @@ Strive Blog è una piattaforma di blogging full‑stack, realizzata con lo stack
 ---
 
 ## 🚀 Live Demo
-🌍 Frontend: [https://link-demo-frontend.com](https://link-demo-frontend.com)  
-🔙 Backend: [https://link-demo-backend.com](https://link-demo-backend.com)
+🌍 Frontend: [https://link-demo-frontend.com](https://front-end-strive-blog.vercel.app/)  
+🔙 Backend: [https://link-demo-backend.com](https://backend-strive-blog.onrender.com)
 
-> *(Inserisci i link quando saranno deployati su Vercel / Render)*
 
 ---
 
