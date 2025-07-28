@@ -24,7 +24,6 @@ Password: `123456`
 Email: `admin@demo.com`  
 Password: `admin123`
 
-> *(Facoltativo. Modifica o rimuovi se non previsto.)*
 
 ---
 
