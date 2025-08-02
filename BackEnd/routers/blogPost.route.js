@@ -5,7 +5,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router()
 
-router.use(authMiddleware);
+// router.use(authMiddleware); // Middleware per pa protezione
 
 router.get('/', async (req, res) => {
     try {
@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 
         // 4) Tempo di lettura minore di un certo valore
         if (req.query.maxReadTime) {
-            conditions.push({ readTime: { $gte: parseInt(req.query.dataMassima) } });
+            conditions.push({ "readTime.value": { $lte: parseInt(req.query.maxReadTime) } });
         }
 
         // 5) Costruisco il filtro finale

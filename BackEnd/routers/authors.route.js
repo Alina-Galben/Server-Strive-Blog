@@ -7,7 +7,7 @@ import blogPostModel from '../models/blogPostSchema.js';
 
 const router = express.Router()
 
-router.use(authMiddleware); // Middleware per pa protezione
+// router.use(authMiddleware); // Middleware per pa protezione
 
 router.get('/', async (req, res) => {
   try {
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 
     // 4) Data di nascita più piccola di una certa data
     if (req.query.dataMassima) {
-        conditions.push({ dataDiNascita: { $gte: req.query.dataMassima } });
+        conditions.push({ dataDiNascita: { $lte: req.query.dataMassima } });
     }
 
     // 5) Costruisco il filtro finale

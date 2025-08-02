@@ -13,6 +13,7 @@ router.post('/register', uploadAvatar.single("avatar"), async (req, res) => {
     try {
         const { nome, cognome, username, email, dataDiNascita, password } = req.body;
         const avatar = req.file?.path;
+        console.log("Avatar ricevuto da multer:", req.file);
 
         if(!nome || !cognome || !username || !email || !dataDiNascita || !avatar || !password )
             return res.status(400).json({ error: 'Tutti i campi sono obbligatori'});

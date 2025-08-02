@@ -18,7 +18,27 @@ import authRouter from './routers/auth.route.js';
 const app = express();
 
 // Middleware base
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:3002',
+  'https://front-end-strive-blog.vercel.app'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('❌ Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+
 app.use(express.json())
 app.use(passport.initialize()) // Inizializza Passport
 
