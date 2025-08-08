@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Card, Spinner } from "react-bootstrap";
 
@@ -11,9 +11,10 @@ const AuthorProfile = () => {
   const [author, setAuthor] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchAuthor = async () => {
+  // ✅ useCallback per evitare warning su useEffect
+  const fetchAuthor = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/authors/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/authors/${id}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -32,11 +33,11 @@ const AuthorProfile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
   useEffect(() => {
     fetchAuthor();
-  }, [id]);
+  }, [fetchAuthor]);
 
   if (loading) {
     return (

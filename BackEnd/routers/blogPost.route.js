@@ -5,7 +5,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router()
 
-// router.use(authMiddleware); // Middleware per pa protezione
+// router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
     try {
@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 
         // 4) Tempo di lettura minore di un certo valore
         if (req.query.maxReadTime) {
-            conditions.push({ "readTime.value": { $lte: parseInt(req.query.maxReadTime) } });
+            conditions.push({ readTime: { $lte: parseInt(req.query.dataMassima) } });
         }
 
         // 5) Costruisco il filtro finale
@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
 */
 
 // Post Creazione blogPost con file copertina - cover con upload
-router.post('/', uploadCover.single('cover'), async (req, res) => {
+router.post('/', authMiddleware, uploadCover.single('cover'), async (req, res) => {
     try {
       console.log("📝 Creazione blogPost - BODY:", req.body);
       console.log("🖼️ File copertina ricevuto:", req.file);
@@ -87,7 +87,14 @@ router.post('/', uploadCover.single('cover'), async (req, res) => {
         return res.status(400).json({ error: "⚠️ Campi obbligatori mancanti (category, title, readTime, author, content)." });
       }
   
-      const parsedReadTime = JSON.parse(readTime); // perché Postman potrebbe inviarlo come stringa
+      // perché Postman potrebbe inviarlo come stringa
+      let parsedReadTime;
+      try {
+        parsedReadTime = JSON.parse(readTime);
+      } catch (err) {
+        return res.status(400).json({ error: "readTime non è in formato JSON valido." });
+      }
+
   
       // 2. Gestione copertina
       let cover;
@@ -123,7 +130,7 @@ router.post('/', uploadCover.single('cover'), async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     const id = req.params.id;
     const obj = req.body;
     try {
@@ -134,7 +141,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     const id = req.params.id;
     try {
         await blogPostModel.findByIdAndDelete(id);

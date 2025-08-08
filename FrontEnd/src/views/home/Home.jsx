@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import BlogList from "../../components/blog/blog-list/BlogList";
 import { useNavigate } from "react-router-dom";
@@ -22,10 +22,10 @@ const Home = () => {
     setSearchTerm(searchQuery);
   };
 
-  const fetchAuthors = async (pageToLoad = 1) => {
+  const fetchAuthors = useCallback(async (pageToLoad = 1) => {
     try {
       const token = getToken();
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/authors?page=${pageToLoad}&size=10`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/authors?page=${pageToLoad}&size=10`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,13 +42,11 @@ const Home = () => {
     } catch (error) {
       console.error("Errore nel caricamento autori:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (showAuthors) {
-      fetchAuthors(1); // carica la prima pagina
-    }
-  }, [showAuthors]);
+    if (showAuthors) fetchAuthors(1); // carica la prima pagina
+  }, [showAuthors, fetchAuthors]);
 
   const handleLoadMore = async () => {
     setLoadingMore(true);

@@ -33,7 +33,7 @@ const Register = () => {
     }
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/auth/register`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
         method: "POST",
         body: data
       });
@@ -54,7 +54,7 @@ const Register = () => {
 
   // Funzione per la registrazione con Google
   const handleGoogleRegister = () => {
-    window.location.href = `${process.env.REACT_APP_APYURL}/auth/google`;
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
   };
 
   return (

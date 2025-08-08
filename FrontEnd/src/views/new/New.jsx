@@ -26,7 +26,7 @@ const NewBlogPost = () => {
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_APYURL}/auth/me`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
         if (res.ok) {
@@ -54,7 +54,7 @@ const NewBlogPost = () => {
     formData.append("readTime", JSON.stringify({ value: Number(readTimeValue), unit: readTimeUnit }));
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/blogPost`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/blogPost`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

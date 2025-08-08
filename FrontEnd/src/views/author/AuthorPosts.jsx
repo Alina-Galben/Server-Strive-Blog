@@ -18,7 +18,7 @@ const AuthorPosts = () => {
       try {
         const token = getToken();
 
-        const res = await fetch(`${process.env.REACT_APP_APYURL}/authors/${id}/blogPosts`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/authors/${id}/blogPosts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

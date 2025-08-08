@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 
 const CommentArea = ({ postId }) => {
@@ -7,14 +7,13 @@ const CommentArea = ({ postId }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const getToken = () =>
-    localStorage.getItem("token") || process.env.REACT_APP_TOKEN;
+  const getToken = () => localStorage.getItem("token") || process.env.REACT_APP_TOKEN;
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `${process.env.REACT_APP_APYURL}/comments/blogPosts/${postId}`,
+        `${process.env.REACT_APP_API_URL}/comments/blogPost/${postId}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -28,17 +27,17 @@ const CommentArea = ({ postId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   useEffect(() => {
     fetchComments();
-  }, [postId]);
+  }, [fetchComments]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_APYURL}/comments/blogPosts/${postId}`,
+        `${process.env.REACT_APP_API_URL}/comments/blogPost/${postId}`,
         {
           method: "POST",
           headers: {
@@ -72,7 +71,7 @@ const CommentArea = ({ postId }) => {
       ) : (
         <ul>
           {comments.map((comment, i) => (
-            <li key={i}>
+            <li key={comment._id}>
               <strong>{comment.userName}</strong>: {comment.text}
             </li>
           ))}

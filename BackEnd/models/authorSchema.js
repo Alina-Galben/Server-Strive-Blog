@@ -9,7 +9,7 @@ const authorsSchema = new mongoose.Schema({
     nome: { type: String, required: true },
     cognome: { type: String, required: false },
     username: { type: String, required: true, unique: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     dataDiNascita: { type: String, required: false },
     avatar: { type: String, required: true },
     password: { type: String, required: true},

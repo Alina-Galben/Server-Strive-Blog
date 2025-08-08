@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Container, Card, Spinner, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import BlogItem from "../../components/blog/blog-item/BlogItem";
@@ -12,9 +12,10 @@ const AuthorMe = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const fetchUserData = async () => {
+  // ✅ useCallback per evitare warning in useEffect
+  const fetchUserData = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/auth/me`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -29,7 +30,7 @@ const AuthorMe = () => {
       setUser(data);
 
       const postsRes = await fetch(
-        `${process.env.REACT_APP_APYURL}/authors/${data._id}/blogPosts`,
+        `${process.env.REACT_APP_API_URL}/authors/${data._id}/blogPosts`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -44,11 +45,11 @@ const AuthorMe = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   if (loading) {
     return (
@@ -75,41 +76,40 @@ const AuthorMe = () => {
         <Col md={4}>
           <Card className="mb-4">
             <Card.Img
-                variant="top"
-                src={avatar}
-                onError={(e) => {
+              variant="top"
+              src={avatar}
+              onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "https://placehold.co/300x300?text=Avatar";
-                }}
+              }}
             />
             <Card.Body>
-                <Card.Title>{`${nome} ${cognome}`}</Card.Title>
-                <Card.Text>
+              <Card.Title>{`${nome} ${cognome}`}</Card.Title>
+              <Card.Text>
                 <strong>Username:</strong> {username} <br />
                 <strong>Email:</strong> {email} <br />
                 <strong>Data di nascita:</strong> {dataDiNascita}
-                </Card.Text>
+              </Card.Text>
             </Card.Body>
           </Card>
         </Col>
 
         {/* COLONNA DESTRA - ARTICOLI */}
         <Col md={8}>
-            <h4>I tuoi articoli pubblicati</h4>
-            <Row className="mt-3">
+          <h4>I tuoi articoli pubblicati</h4>
+          <Row className="mt-3">
             {posts.length > 0 ? (
-                posts.map((post, i) => (
-                <Col md={6} key={i} className="mb-4">
-                    <BlogItem {...post} />
+              posts.map((post) => (
+                <Col md={6} key={post._id} className="mb-4">
+                  <BlogItem {...post} />
                 </Col>
-                ))
+              ))
             ) : (
-                <p>Non hai ancora pubblicato nessun articolo.</p>
+              <p>Non hai ancora pubblicato nessun articolo.</p>
             )}
-            </Row>
+          </Row>
         </Col>
       </Row>
-
     </Container>
   );
 };

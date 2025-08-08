@@ -3,7 +3,8 @@ import { Col, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./styles.css";
 
-const BlogAuthor = ({ name, avatar, _id }) => {
+const BlogAuthor = ({ name, nome, cognome, avatar, _id }) => {
+  const displayName = name || [nome, cognome].filter(Boolean).join(" ");
   const defaultAvatar = "https://placehold.co/100x100?text=Avatar";
 
   return (
@@ -22,7 +23,9 @@ const BlogAuthor = ({ name, avatar, _id }) => {
       <Col>
         <div>di</div>
         <h6>
-          <Link to={`/author/${_id}`} style={{ textDecoration: "none", color: "inherit" }}>{name}</Link>
+          <Link to={`/author/${_id}`} style={{ textDecoration: "none", color: "inherit" }}>
+            {displayName}
+          </Link>
         </h6>
       </Col>
     </Row>

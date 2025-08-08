@@ -26,7 +26,7 @@ const BlogItem = ({ title, cover, author, _id }) => {
         </Card.Title>
       </Card.Body>
       <Card.Footer>
-        <BlogAuthor {...author} _id={author._id} />
+        <BlogAuthor {...author} />
       </Card.Footer>
     </Card>
   );

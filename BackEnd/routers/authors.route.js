@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
 */
 
 // Post con inserimento dati, file imagine e email - avatar con upload
-router.post('/', uploadAvatar.single('avatar'), async (req, res) => {
+router.post('/', authMiddleware, uploadAvatar.single('avatar'), async (req, res) => {
   try {
     console.log("📥 Richiesta ricevuta - BODY:", req.body);
     console.log("🖼️ File ricevuto:", req.file);
@@ -138,7 +138,7 @@ router.post('/', uploadAvatar.single('avatar'), async (req, res) => {
 });
   
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
   const id = req.params.id;
   const obj = req.body;
   try {
@@ -149,7 +149,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   const id = req.params.id;
   try {
     await authorModel.findByIdAndDelete(id);

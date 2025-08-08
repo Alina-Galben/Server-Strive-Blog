@@ -10,24 +10,24 @@ const NavBar = () => {
 
   const token = localStorage.getItem("token");
 
-  const fetchUser = async () => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_APYURL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        } else {
+          setUser(null);
+        }
+      } catch {
         setUser(null);
       }
-    } catch {
-      setUser(null);
-    }
-  };
+    };
 
-  useEffect(() => {
     if (token) fetchUser();
   }, [token]);
 
