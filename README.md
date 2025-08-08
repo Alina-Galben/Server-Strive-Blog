@@ -15,17 +15,6 @@ Strive Blog è una piattaforma di blogging full‑stack, realizzata con lo stack
 
 ---
 
-## 🔐 Credenziali demo
-👤 **Utente base**  
-Email: `user@demo.com`  
-Password: `123456`
-
-👑 **Admin**  
-Email: `admin@demo.com`  
-Password: `admin123`
-
-
----
 
 ## 🧠 Funzionalità
 - CRUD completo per articoli
